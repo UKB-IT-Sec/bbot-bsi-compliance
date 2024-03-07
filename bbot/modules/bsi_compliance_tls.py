@@ -12,7 +12,7 @@ from tlslite.api import *
 
 # TR-02102-2 | 3.3.1.1, 3.3.1.2 und 3.3.1.3
 # Cipher suites with the pattern TLS_RSA_PSK_* do not provide Perfect Forward Secrecy
-cipher_suites_tls1_2 = {
+CIPHER_SUITES_TLS_1_2 = {
     # 3.3.1.1
     "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256" : {
         "name": "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256",
@@ -274,7 +274,7 @@ cipher_suites_tls1_2 = {
 }
 
 # TR-02102-2 | 3.4.4
-cipher_suites_tls1_3 = {
+CIPHER_SUITES_TLS_1_3 = {
     "TLS_AES_128_GCM_SHA256": {
         "name": "TLS_AES_128_GCM_SHA256",
         "valid_until": 2029,
@@ -290,39 +290,6 @@ cipher_suites_tls1_3 = {
         "valid_until": 2029,
         "reason": "Empfohlen in TR-02102-2 | 3.4.4",
     },
-}
-
-ssl_protocols = {
-    "SSL 2.0": {
-        "name": "SSL 2.0",
-        "valid_until": -1,
-        "reason": "Nicht empfohlen in TR-02102-2 | 3.2",
-    },
-    "SSL 3.0": {
-        "name": "SSL 3.0",
-        "valid_until": -1,
-        "reason": "Nicht empfohlen in TR-02102-2 | 3.2",
-    },
-    "TLS 1.0": {
-        "name": "TLS 1.0",
-        "valid_until": -1,
-        "reason": "Nicht empfohlen in TR-02102-2 | 3.2",
-    },
-    "TLS 1.1": {
-        "name": "TLS 1.1",
-        "valid_until": -1,
-        "reason": "Nicht empfohlen in TR-02102-2 | 3.2",
-    },
-    "TLS 1.2": {
-        "name": "TLS 1.2",
-        "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.2",
-    },
-    "TLS 1.3": {
-        "name": "TLS 1.3",
-        "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.2",
-    }
 }
 
 tls_enabled_protocols = ["MQTT5", "HTTPS", "SMTPS", "MQTT3", "RDP", "POP3S", "LDAPS", "IMAPS", "Kafka"]
@@ -448,7 +415,7 @@ class bsi_compliance_tls(BaseModule):
         if len(scan_result.tls_1_3_cipher_suites.result.accepted_cipher_suites) > 0:
             output_data["found_algorithms"]["PROTOCOLS"].append("TLS 1.3")
             self.info(f"TLS 1.3 is supported")
-            secure_tls_1_3_ciphers, insecure_tls_1_3_ciphers = self.check_tls_1_3_cipher_suites(scan_result.tls_1_3_cipher_suites.result.accepted_cipher_suites, cipher_suites_tls1_3)
+            secure_tls_1_3_ciphers, insecure_tls_1_3_ciphers = self.check_tls_1_3_cipher_suites(scan_result.tls_1_3_cipher_suites.result.accepted_cipher_suites, CIPHER_SUITES_TLS_1_3)
             output_data["found_algorithms"]["TLS_1_3_CIPHERS"].append(secure_tls_1_3_ciphers + insecure_tls_1_3_ciphers)
             output_data["invalid_algorithms"]["TLS_1_3_CIPHERS"].append(insecure_tls_1_3_ciphers)
         else:
@@ -590,14 +557,14 @@ class bsi_compliance_tls(BaseModule):
         
         for cipher_suite_accepted_by_server in cipher_suites:
             cipher_suite_name = cipher_suite_accepted_by_server.cipher_suite.name
-            if cipher_suite_name not in cipher_suites_tls1_2:
+            if cipher_suite_name not in CIPHER_SUITES_TLS_1_2:
                 insecure_ciphers.append({
                     "name": cipher_suite_name,
                     "reason": "Nicht empfohlen in TR-02102-2",
                     "valid_until": -1,
                 })
                 continue
-            cipher_suite = cipher_suites_tls1_2[cipher_suite_name]
+            cipher_suite = CIPHER_SUITES_TLS_1_2[cipher_suite_name]
             if cipher_suite["valid_until"] > self.compliant_until:
                 cipher_suite["reason"] = "Nicht empfohlen in TR-02102-2 | Gültigkeitsdauer abgelaufen"
                 insecure_ciphers.append(cipher_suite)
@@ -627,14 +594,14 @@ class bsi_compliance_tls(BaseModule):
 
         for cipher_suite_accepted_by_server in cipher_suites:
             cipher_suite_name = cipher_suite_accepted_by_server.cipher_suite.name
-            if cipher_suite_name not in cipher_suites_tls1_3:
+            if cipher_suite_name not in CIPHER_SUITES_TLS_1_3:
                 insecure_ciphers.append({
                     "name": cipher_suite_name,
                     "reason": "Nicht empfohlen in TR-02102-2",
                     "valid_until": -1,
                 })
                 continue
-            cipher_suite = cipher_suites_tls1_3[cipher_suite_name]
+            cipher_suite = CIPHER_SUITES_TLS_1_3[cipher_suite_name]
             if cipher_suite["valid_until"] > self.compliant_until:
                 cipher_suite["reason"] = "Nicht empfohlen in TR-02102-2 | Gültigkeitsdauer abgelaufen"
                 insecure_ciphers.append(cipher_suite)

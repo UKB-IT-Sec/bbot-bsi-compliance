@@ -464,13 +464,11 @@ class bsi_compliance_tls(BaseModule):
                 })
         
         if self.check_extended_master_secret_supported(event):
-            self.info("Server supports extended master secret")
             output_data["found_algorithms"]["EXTENSIONS"].append({
                 "name": "extended-master-secret",
                 "reason": "Server unterstützt die extended-master-secret Erweiterung TR-02102-2 | 3.3.4.7"
                 })
         else:
-            self.info("Server does not support extended master secret")
             output_data["invalid_algorithms"]["EXTENSIONS"].append({
                 "name": "extended-master-secret",
                 "reason": "Server unterstützt die extended-master-secret Erweiterung nicht TR-02102-2 | 3.3.4.6"

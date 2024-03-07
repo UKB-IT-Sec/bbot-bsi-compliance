@@ -304,7 +304,7 @@ class bsi_compliance_tls(BaseModule):
     deps_pip = ["sslyze~=5.2.0", "tlslite-ng~=0.7.6"]
     meta = {"description": "Check discovered TLS services for compliance with BSI KRITIS standards"}
     options = {"compliant_until": ""}
-    options_desc = {"valid_until": "Configuration compliant until year"}
+    options_desc = {"valid_until": "Configuration compliant until year (e.g. 2026)"}
 
     async def setup(self):
         self.compliant_until = self.config.get("compliant_until", "")

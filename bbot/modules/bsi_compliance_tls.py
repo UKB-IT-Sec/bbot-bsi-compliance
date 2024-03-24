@@ -415,7 +415,7 @@ class bsi_compliance_tls(BaseModule):
         if len(scan_result.tls_1_3_cipher_suites.result.accepted_cipher_suites) > 0:
             output_data["found_algorithms"]["PROTOCOLS"].append("TLS 1.3")
             self.verbose(f"TLS 1.3 is supported")
-            secure_tls_1_3_ciphers, insecure_tls_1_3_ciphers = self.check_tls_1_3_cipher_suites(scan_result.tls_1_3_cipher_suites.result.accepted_cipher_suites, CIPHER_SUITES_TLS_1_3)
+            secure_tls_1_3_ciphers, insecure_tls_1_3_ciphers = self.check_tls_1_3_cipher_suites(scan_result.tls_1_3_cipher_suites.result.accepted_cipher_suites)
             output_data["found_algorithms"]["TLS_1_3_CIPHERS"].append(secure_tls_1_3_ciphers + insecure_tls_1_3_ciphers)
             output_data["invalid_algorithms"]["TLS_1_3_CIPHERS"].append(insecure_tls_1_3_ciphers)
         else:

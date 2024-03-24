@@ -304,7 +304,7 @@ class bsi_compliance_tls(BaseModule):
     deps_pip = ["sslyze~=5.2.0", "tlslite-ng~=0.7.6"]
     meta = {"description": "Check discovered TLS services for compliance with BSI KRITIS standards"}
     options = {"compliant_until": ""}
-    options_desc = {"valid_until": "Configuration compliant until year (e.g. 2026)"}
+    options_desc = {"compliant_until": "Configuration compliant until year (e.g. 2026)"}
 
     async def setup(self):
         self.compliant_until = self.config.get("compliant_until", "")
@@ -318,7 +318,7 @@ class bsi_compliance_tls(BaseModule):
             self.verbose(f"Skipping {event.data['protocol']} because it is not a TLS protocol")
             return
 
-        self.info(f"Checking host {event.host}:{event.port} for TLS compliance")
+        self.info(f"Checking host {event.host}:{event.port} for TLS compliance until year {self.compliant_until}")
 
         # Create a new scanner and queue the scan
         try:
@@ -350,7 +350,7 @@ class bsi_compliance_tls(BaseModule):
         
         # Parse the results
         output_data = {
-            "found_algorithms": 
+            "found_algorithms":
             {
                 "PROTOCOLS": [],
                 "TLS_1_2_CIPHERS": [], 
@@ -382,25 +382,25 @@ class bsi_compliance_tls(BaseModule):
         if len(scan_result.ssl_2_0_cipher_suites.result.accepted_cipher_suites) > 0:
             output_data["found_algorithms"]["PROTOCOLS"].append("SSL 2.0")
             output_data["invalid_algorithms"]["PROTOCOLS"].append("SSL 2.0")
-            self.info(f"SSL 2.0 is supported")
+            self.verbose(f"SSL 2.0 is supported")
         if len(scan_result.ssl_3_0_cipher_suites.result.accepted_cipher_suites) > 0:
             output_data["found_algorithms"]["PROTOCOLS"].append("SSL 3.0")
             output_data["invalid_algorithms"]["PROTOCOLS"].append("SSL 3.0")
-            self.info(f"SSL 3.0 is supported")
+            self.verbose(f"SSL 3.0 is supported")
         if len(scan_result.tls_1_0_cipher_suites.result.accepted_cipher_suites) > 0:
             output_data["found_algorithms"]["PROTOCOLS"].append("TLS 1.0")
             output_data["invalid_algorithms"]["PROTOCOLS"].append("TLS 1.0")
-            self.info(f"TLS 1.0 is supported")
+            self.verbose(f"TLS 1.0 is supported")
         if len(scan_result.tls_1_1_cipher_suites.result.accepted_cipher_suites) > 0:
             output_data["found_algorithms"]["PROTOCOLS"].append("TLS 1.1")
             output_data["invalid_algorithms"]["PROTOCOLS"].append("TLS 1.1")
-            self.info(f"TLS 1.1 is supported")
+            self.verbose(f"TLS 1.1 is supported")
 
         # Check if TLS 1.2 is supported and check cipher suites
         secure_tls_1_2_ciphers, insecure_tls_1_2_ciphers = [], []
         lucky13_vulnerable = False
         if len(scan_result.tls_1_2_cipher_suites.result.accepted_cipher_suites) > 0:
-            self.info(f"TLS 1.2 is supported")
+            self.verbose(f"TLS 1.2 is supported")
             output_data["found_algorithms"]["PROTOCOLS"].append("TLS 1.2")
             secure_tls_1_2_ciphers, insecure_tls_1_2_ciphers, lucky13_vulnerable = self.check_tls_1_2_cipher_suites(scan_result.tls_1_2_cipher_suites.result.accepted_cipher_suites)
             output_data["found_algorithms"]["TLS_1_2_CIPHERS"].append(secure_tls_1_2_ciphers + insecure_tls_1_2_ciphers)
@@ -408,24 +408,24 @@ class bsi_compliance_tls(BaseModule):
             
         else:
             output_data["invalid_algorithms"]["PROTOCOLS"].append("TLS 1.2 NOT SUPPORTED")
-            self.info("Error: No TLS 1.2 cipher suites supported")
+            self.verbose("Error: No TLS 1.2 cipher suites supported")
 
         # Check if TLS 1.3 is supported and check cipher suites
         secure_tls_1_3_ciphers, insecure_tls_1_3_ciphers = [], []
         if len(scan_result.tls_1_3_cipher_suites.result.accepted_cipher_suites) > 0:
             output_data["found_algorithms"]["PROTOCOLS"].append("TLS 1.3")
-            self.info(f"TLS 1.3 is supported")
+            self.verbose(f"TLS 1.3 is supported")
             secure_tls_1_3_ciphers, insecure_tls_1_3_ciphers = self.check_tls_1_3_cipher_suites(scan_result.tls_1_3_cipher_suites.result.accepted_cipher_suites, CIPHER_SUITES_TLS_1_3)
             output_data["found_algorithms"]["TLS_1_3_CIPHERS"].append(secure_tls_1_3_ciphers + insecure_tls_1_3_ciphers)
             output_data["invalid_algorithms"]["TLS_1_3_CIPHERS"].append(insecure_tls_1_3_ciphers)
         else:
             output_data["invalid_algorithms"]["PROTOCOLS"].append("TLS 1.3 NOT SUPPORTED")
-            self.info("No TLS 1.3 cipher suites supported")
+            self.verbose("No TLS 1.3 cipher suites supported")
             
         # Check if the server is vulnerable to heartbleed
         if scan_result.heartbleed.result.is_vulnerable_to_heartbleed:
             self.info("Server is vulnerable to heartbleed")
-            self.make_event( 
+            vulnerability_event = self.make_event( 
                 {"severity": "CRITICAL",
                  "host": str(event.host),
                  "url": "https://" + str(event.host) + ":" + str(event.port),
@@ -434,6 +434,7 @@ class bsi_compliance_tls(BaseModule):
                 event,
                 tags=["tls", "bsi_compliance"]
             )
+            await self.emit_event(vulnerability_event)
             output_data["invalid_algorithms"]["EXTENSIONS"].append({
                 "name": "heartbeat", 
                 "reason": "Heartbleed Verwundbarkeit erkannt TR-02102-2 | 3.3.4.6"
@@ -441,7 +442,7 @@ class bsi_compliance_tls(BaseModule):
         
         # Check if the server supports TLS compression (CRIME attack)
         if scan_result.tls_compression.result.supports_compression:
-            self.info("Server supports TLS compression")
+            self.verbose("Server supports TLS compression")
             output_data["invalid_algorithms"]["EXTENSIONS"].append({
                 "name": "tls-compression", 
                 "reason": "TLS Compression wird unterstützt TR-02102-2 | 3.3.4.3"
@@ -450,7 +451,7 @@ class bsi_compliance_tls(BaseModule):
         # Check if the server is vulnerable to LUCKY13
         if lucky13_vulnerable:
             self.info("Server is potentially vulnerable to LUCKY13")
-            self.emit_event(
+            await self.emit_event(
                     {"description": "Server is potentially vulnerable to LUCKY13.",
                      "host": str(event.host),
                      "url": event.data},
@@ -474,16 +475,21 @@ class bsi_compliance_tls(BaseModule):
                 "reason": "Server unterstützt die extended-master-secret Erweiterung nicht TR-02102-2 | 3.3.4.6"
                 })
         
-        self.make_event("BSI_COMPLIANCE_RESULT", output_data, source=event, tags=["TLS"])
+        self.info("BSI Compliance check complete")
+        compliance_event = self.make_event(output_data, "BSI_COMPLIANCE", source=event, tags=["TLS"])
+        await self.emit_event(compliance_event)
 
     
     def check_encrypt_then_mac_supported(self, event):
-        """Check if the server supports encrypt-then-mac
+        """
+        Check if the server supports encrypt-then-mac
         
         Parameters:
+        ----------
             event (Dict): Event object
-        
+
         Returns:
+        ----------
             supported (Bool): True if the server supports encrypt-then-mac, False otherwise
         """
         supported = False
@@ -503,20 +509,23 @@ class bsi_compliance_tls(BaseModule):
         # Check if the server supports the encrypt-then-mac extension
         if connection.session.encryptThenMAC:
             supported = True
-            self.info("Server supports the encrypt-then-mac extension")
+            self.verbose("Server supports the encrypt-then-mac extension")
         else:
-            self.info("Server does not support the encrypt-then-mac extension")
+            self.verbose("Server does not support the encrypt-then-mac extension")
             
         connection.close()
         return supported
     
     def check_extended_master_secret_supported(self, event):
-        """Check if the server supports extended master secret
+        """
+        Check if the server supports extended master secret
         
         Parameters:
+        ----------
             event (Dict): Event object
         
         Returns:
+        ----------
             supported (Bool): True if the server supports extended master secret, False otherwise
         """
         supported = False
@@ -530,20 +539,23 @@ class bsi_compliance_tls(BaseModule):
         # Check if the server supports the extended master secret extension
         if connection.session.extendedMasterSecret:
             supported = True
-            self.info("Server supports the extended master secret extension")
+            self.verbose("Server supports the extended master secret extension")
         else:
-            self.info("Server does not support the extended master secret extension")
+            self.verbose("Server does not support the extended master secret extension")
 
         connection.close()
         return supported
     
     def check_tls_1_2_cipher_suites(self, cipher_suites):
-        """Check if the tls 1.3 cipher suites are compliant with BSI KRITIS standards
+        """
+        Check if the tls 1.3 cipher suites are compliant with BSI KRITIS standards
         
         Parameters:
+        ----------
             cipher_suites (Array): Array of cipher suites to check
         
         Returns:
+        ----------
             secure_ciphers (Array): Array of secure cipher suites
             insecure_ciphers (Array): Array of insecure cipher suites
         """
@@ -563,7 +575,7 @@ class bsi_compliance_tls(BaseModule):
                 })
                 continue
             cipher_suite = CIPHER_SUITES_TLS_1_2[cipher_suite_name]
-            if cipher_suite["valid_until"] > self.compliant_until:
+            if cipher_suite["valid_until"] < self.compliant_until:
                 cipher_suite["reason"] = "Nicht empfohlen in TR-02102-2 | Gültigkeitsdauer abgelaufen"
                 insecure_ciphers.append(cipher_suite)
                 continue
@@ -578,12 +590,15 @@ class bsi_compliance_tls(BaseModule):
         
     
     def check_tls_1_3_cipher_suites(self, cipher_suites):
-        """Check if the tls 1.2 cipher suites are compliant with BSI KRITIS standards
+        """
+        Check if the tls 1.2 cipher suites are compliant with BSI KRITIS standards
 
         Parameters:
+        ----------
             cipher_suites (Array): Array of cipher suites to check
             
         Returns:
+        ----------
             secure_ciphers (Array): Array of secure cipher suites
             insecure_ciphers (Array): Array of insecure cipher suites
         """
@@ -600,7 +615,7 @@ class bsi_compliance_tls(BaseModule):
                 })
                 continue
             cipher_suite = CIPHER_SUITES_TLS_1_3[cipher_suite_name]
-            if cipher_suite["valid_until"] > self.compliant_until:
+            if cipher_suite["valid_until"] < self.compliant_until:
                 cipher_suite["reason"] = "Nicht empfohlen in TR-02102-2 | Gültigkeitsdauer abgelaufen"
                 insecure_ciphers.append(cipher_suite)
                 continue

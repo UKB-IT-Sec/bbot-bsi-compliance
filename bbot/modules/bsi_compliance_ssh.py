@@ -1,36 +1,84 @@
 from bbot.modules.base import BaseModule
-import socket
+import socket, copy
 from datetime import datetime
 
 
-BSI_KEX_ALGORITHMS = [
-    {"name": "diffie-hellman-group-exchange-sha256", "valid_until": 2029},
-    {"name": "diffie-hellman-group15-sha512", "valid_until": 2029},
-    {"name": "diffie-hellman-group16-sha512", "valid_until": 2029},
-    {"name": "ecdh-sha2-nistp256", "valid_until": 2029},
-    {"name": "ecdh-sha2-nistp384", "valid_until": 2029},
-    {"name": "ecdh-sha2-nistp521", "valid_until": 2029},
-]
+BSI_KEX_ALGORITHMS = {
+    "diffie-hellman-group-exchange-sha256": {
+        "name": "diffie-hellman-group-exchange-sha256",
+        "valid_until": 2030,
+        "description": "Must use SHA-256 for the key derivation pseudo-random-function (PRF), the length of the prime number p should be at least 3000 bits, the order of the generator g should at least have the size of 2 to the power of 250 and p should be a safe prime, which means that with p = 2q+1, both p and q are prime",
+    },
+    "diffie-hellman-group15-sha512": {"name": "diffie-hellman-group15-sha512", "valid_until": 2030},
+    "diffie-hellman-group16-sha512": {"name": "diffie-hellman-group16-sha512", "valid_until": 2030},
+    "ecdh-sha2-nistp256": {
+        "name": "ecdh-sha2-nistp256",
+        "valid_until": 2030,
+        "description": "requires curve length <= 256",
+    },
+    "ecdh-sha2-nistp384": {
+        "name": "ecdh-sha2-nistp384",
+        "valid_until": 2030,
+        "description": "requires curve length > 256 and <= 384",
+    },
+    "ecdh-sha2-nistp521": {
+        "name": "ecdh-sha2-nistp521",
+        "valid_until": 2030,
+        "description": "requires curve length > 384",
+    },
+}
 
-BSI_ENCRYPTION_ALGORITHMS = [
-    {"name": "AEAD_AES_128_GCM", "valid_until": 2029},
-    {"name": "AEAD_AES_256_GCM", "valid_until": 2029},
-    {"name": "aes128-ctr", "valid_until": 2029},
-    {"name": "aes192-ctr", "valid_until": 2029},
-    {"name": "aes256-ctr", "valid_until": 2029},
-]
+BSI_ENCRYPTION_ALGORITHMS = {
+    "AEAD_AES_128_GCM": {"name": "AEAD_AES_128_GCM", "valid_until": 2030},
+    "AEAD_AES_256_GCM": {"name": "AEAD_AES_256_GCM", "valid_until": 2030},
+    "aes128-ctr": {"name": "aes128-ctr", "valid_until": 2030},
+    "aes192-ctr": {"name": "aes192-ctr", "valid_until": 2030},
+    "aes256-ctr": {"name": "aes256-ctr", "valid_until": 2030},
+}
 
-BSI_MAC_ALGORITHMS = [{"name": "hmac-sha2-256", "valid_until": 2029}, {"name": "hmac-sha2-512", "valid_until": 2029}]
+BSI_MAC_ALGORITHMS = {
+    "hmac-sha2-256": {"name": "hmac-sha2-256", "valid_until": 2030},
+    "hmac-sha2-512": {"name": "hmac-sha2-512", "valid_until": 2030},
+}
 
-BSI_SERVER_HOST_KEY_ALGORITHMS = [
-    {"name": "pgp-sign-dss", "valid_until": 2029},
-    {"name": "ecdsa-sha2-nistp256", "valid_until": 2029},
-    {"name": "ecdsa-sha2-nistp384", "valid_until": 2029},
-    {"name": "ecdsa-sha2-nistp521", "valid_until": 2029},
-    {"name": "x509v3-ecdsa-sha2-nistp256", "valid_until": 2029},
-    {"name": "x509v3-ecdsa-sha2-nistp384", "valid_until": 2029},
-    {"name": "x509v3-ecdsa-sha2-nistp521", "valid_until": 2029},
-]
+BSI_SERVER_HOST_KEY_ALGORITHMS = {
+    "pgp-sign-dss": {
+        "name": "pgp-sign-dss",
+        "valid_until": 2029,
+        "description": "For this Algorithm the minimum recommended length of the prime p is 3000 bits and the minimum recommended size of the order q is 250 bits. As corresponding hash function, SHA-256, SHA-384, or SHA-512 is recommended ",
+    },
+    "ecdsa-sha2-nistp256": {
+        "name": "ecdsa-sha2-nistp256",
+        "valid_until": 2030,
+        "description": "requires curve length <= 256",
+    },
+    "ecdsa-sha2-nistp384": {
+        "name": "ecdsa-sha2-nistp384",
+        "valid_until": 2030,
+        "description": "requires curve length > 256 and <= 384",
+    },
+    "ecdsa-sha2-nistp521": {
+        "name": "ecdsa-sha2-nistp521",
+        "valid_until": 2030,
+        "description": "requires curve length > 384",
+    },
+    "x509v3-ecdsa-sha2-nistp256": {
+        "name": "x509v3-ecdsa-sha2-nistp256",
+        "valid_until": 2030,
+        "description": "requires curve length <= 256",
+    },
+    "x509v3-ecdsa-sha2-nistp384": {
+        "name": "x509v3-ecdsa-sha2-nistp384",
+        "valid_until": 2030,
+        "description": "requires curve length > 256 and <= 384",
+    },
+    "x509v3-ecdsa-sha2-nistp521": {
+        "name": "x509v3-ecdsa-sha2-nistp521",
+        "valid_until": 2030,
+        "description": "requires curve length > 384",
+    },
+}
+
 
 CURRENT_YEAR = datetime.now().year
 
@@ -45,23 +93,95 @@ class bsi_compliance_ssh(BaseModule):
     ]  # active = Makes active connections to target systems, safe = Non-intrusive, safe to run, report = Generates a report at the end of the scan,
     meta = {"description": "Checks Algorithms used by the Target - SSH"}
     options = {"version": "1.0"}
-    options_desc = {"version": "Version based of last fundamental Change"}
+    options_desc = {"version": "Version based on last fundamental Change"}
     _max_event_handlers = 2
     _type = "check"
 
     async def handle_event(self, event):
         if "SSH" in event.data["protocol"]:  # Tests if the protocol matches
+
+            # Check for outdated BSI Algorithms
+            [
+                await self.emit_event(
+                    {
+                        "host": event.data["host"],
+                        "description": algorithm["name"]
+                        + " is only valid until "
+                        + str(algorithm["valid_until"])
+                        + ": Please check suppoerted Algorithms",
+                    },
+                    "FINDING",
+                    source=event,
+                    tags="SSH",
+                )
+                for algorithm in BSI_KEX_ALGORITHMS.values()
+                if algorithm["valid_until"] < CURRENT_YEAR + 2
+            ]
+            [
+                await self.emit_event(
+                    {
+                        "host": event.data["host"],
+                        "description": algorithm["name"]
+                        + " is only valid until "
+                        + str(algorithm["valid_until"])
+                        + ": Please check suppoerted Algorithms",
+                    },
+                    "FINDING",
+                    source=event,
+                    tags="SSH",
+                )
+                for algorithm in BSI_SERVER_HOST_KEY_ALGORITHMS.values()
+                if algorithm["valid_until"] < CURRENT_YEAR + 2
+            ]
+            [
+                await self.emit_event(
+                    {
+                        "host": event.data["host"],
+                        "description": algorithm["name"]
+                        + " is only valid until "
+                        + str(algorithm["valid_until"])
+                        + ": Please check suppoerted Algorithms",
+                    },
+                    "FINDING",
+                    source=event,
+                    tags="SSH",
+                )
+                for algorithm in BSI_MAC_ALGORITHMS.values()
+                if algorithm["valid_until"] < CURRENT_YEAR + 2
+            ]
+            [
+                await self.emit_event(
+                    {
+                        "host": event.data["host"],
+                        "description": algorithm["name"]
+                        + " is only valid until "
+                        + str(algorithm["valid_until"])
+                        + ": Please check suppoerted Algorithms",
+                    },
+                    "FINDING",
+                    source=event,
+                    tags="SSH",
+                )
+                for algorithm in BSI_ENCRYPTION_ALGORITHMS.values()
+                if algorithm["valid_until"] < CURRENT_YEAR + 2
+            ]
+
+            # Check for Server Algorithms
+
             target_ip = event.data["host"]  # gets IP_Address of Target
             target_port = event.data["port"]  # gets Port of Target
             target_algorithms = self.get_algorithms(target_ip, target_port)
-
             if target_algorithms != 0:
-                target_algorithms = self.parser(target_algorithms)
-                compliance_test_result = self.check_compliance(target_algorithms)
+                parsed_algorithms = self.parser(target_algorithms)
+                compliance_test_result = self.convert_list_to_dict(self.check_compliance(parsed_algorithms))
+                del compliance_test_result["ENCRYPTION_CLIENT_TO_SERVER"]
+                del compliance_test_result["MAC_CLIENT_TO_SERVER"]
+                del compliance_test_result["COMPRESSION_CLIENT_TO_SERVER"]
+                del compliance_test_result["COMPRESSION_SERVER_TO_CLIENT"]
                 compliance_data = {
                     "host": target_ip,
                     "port": target_port,
-                    "found_algorithms": target_algorithms,
+                    "found_algorithms": self.convert_list_to_dict(parsed_algorithms),
                     "invalid_algorithms": compliance_test_result,
                 }
                 await self.emit_event(compliance_data, "BSI_COMPLIANCE_RESULT", source=event, tags="SSH")
@@ -156,56 +276,64 @@ class bsi_compliance_ssh(BaseModule):
 
         return result
 
-    def check_invalid_algorithms(self):
-        [
-            print(algorithm["name"] + " is not valid anymore, please update BSI Guidelines!")
-            for algorithm in BSI_KEX_ALGORITHMS
-            if algorithm["valid_until"] < CURRENT_YEAR
-        ]
-        [
-            print(algorithm["name"] + " is not valid anymore, please update BSI Guidelines!")
-            for algorithm in BSI_SERVER_HOST_KEY_ALGORITHMS
-            if algorithm["valid_until"] < CURRENT_YEAR
-        ]
-        [
-            print(algorithm["name"] + " is not valid anymore, please update BSI Guidelines!")
-            for algorithm in BSI_MAC_ALGORITHMS
-            if algorithm["valid_until"] < CURRENT_YEAR
-        ]
-        [
-            print(algorithm["name"] + " is not valid anymore, please update BSI Guidelines!")
-            for algorithm in BSI_ENCRYPTION_ALGORITHMS
-            if algorithm["valid_until"] < CURRENT_YEAR
-        ]
+    def convert_list_to_dict(self, input_list):
+        parsed_algorithm = copy.deepcopy(input_list)
+        for index, values in enumerate(parsed_algorithm["KEX"]):
+            parsed_algorithm["KEX"][index] = {"name": values}
+            for names in BSI_KEX_ALGORITHMS.keys():
+                if values.__contains__(names):
+                    parsed_algorithm["KEX"][index] = BSI_KEX_ALGORITHMS[names]
 
-    def check_compliance(self, parsed_algorithms):
-        temp = {
-            "KEX": parsed_algorithms["KEX"],
-            "SHK": parsed_algorithms["SERVER_HOST_KEY"],
-            "ENC": parsed_algorithms["ENCRYPTION_SERVER_TO_CLIENT"],
-            "MAC": parsed_algorithms["MAC_SERVER_TO_CLIENT"],
-        }
+        for index, values in enumerate(parsed_algorithm["SERVER_HOST_KEY"]):
+            parsed_algorithm["SERVER_HOST_KEY"][index] = {"name": values}
+            for names in BSI_SERVER_HOST_KEY_ALGORITHMS.keys():
+                if values.__contains__(names):
+                    parsed_algorithm["SERVER_HOST_KEY"][index] = BSI_SERVER_HOST_KEY_ALGORITHMS[names]
 
-        [temp["KEX"].remove(algorithm["name"]) for algorithm in BSI_KEX_ALGORITHMS if algorithm["name"] in temp["KEX"]]
-        [
-            temp["SHK"].remove(algorithm["name"])
-            for algorithm in BSI_SERVER_HOST_KEY_ALGORITHMS
-            if algorithm["name"] in temp["SHK"]
-        ]
-        [
-            (
-                print(algorithm["name"] + " Algorithm is only valid for Key_length of 3000 Bit/ 250 Bit")
-                if "pgp-sign-dss" in algorithm["name"]
-                else None
-            )
-            for algorithm in BSI_SERVER_HOST_KEY_ALGORITHMS
-            if algorithm["name"] in temp["SHK"]
-        ]
-        [
-            temp["ENC"].remove(algorithm["name"])
-            for algorithm in BSI_ENCRYPTION_ALGORITHMS
-            if algorithm["name"] in temp["ENC"]
-        ]
-        [temp["MAC"].remove(algorithm["name"]) for algorithm in BSI_MAC_ALGORITHMS if algorithm["name"] in temp["MAC"]]
+        for index, values in enumerate(parsed_algorithm["ENCRYPTION_CLIENT_TO_SERVER"]):
+            parsed_algorithm["ENCRYPTION_CLIENT_TO_SERVER"][index] = {"name": values}
+
+        for index, values in enumerate(parsed_algorithm["ENCRYPTION_SERVER_TO_CLIENT"]):
+            parsed_algorithm["ENCRYPTION_SERVER_TO_CLIENT"][index] = {"name": values}
+            for names in BSI_ENCRYPTION_ALGORITHMS.keys():
+                if values.__contains__(names):
+                    parsed_algorithm["ENCRYPTION_SERVER_TO_CLIENT"][index] = BSI_ENCRYPTION_ALGORITHMS[names]
+
+        for index, values in enumerate(parsed_algorithm["MAC_CLIENT_TO_SERVER"]):
+            parsed_algorithm["MAC_CLIENT_TO_SERVER"][index] = {"name": values}
+
+        for index, values in enumerate(parsed_algorithm["MAC_SERVER_TO_CLIENT"]):
+            parsed_algorithm["MAC_SERVER_TO_CLIENT"][index] = {"name": values}
+            for names in BSI_MAC_ALGORITHMS.keys():
+                if values.__contains__(names):
+                    parsed_algorithm["MAC_SERVER_TO_CLIENT"][index] = BSI_MAC_ALGORITHMS[names]
+
+        for index, values in enumerate(parsed_algorithm["COMPRESSION_CLIENT_TO_SERVER"]):
+            parsed_algorithm["COMPRESSION_CLIENT_TO_SERVER"][index] = {"name": values}
+
+        for index, values in enumerate(parsed_algorithm["COMPRESSION_SERVER_TO_CLIENT"]):
+            parsed_algorithm["COMPRESSION_SERVER_TO_CLIENT"][index] = {"name": values}
+
+        return parsed_algorithm
+
+    def check_compliance(self, input_list):
+        temp = copy.deepcopy(input_list)
+
+        for algorithm in BSI_KEX_ALGORITHMS.values():
+            for value in temp["KEX"]:
+                if value.__contains__(algorithm["name"]):
+                    temp["KEX"].remove(value)
+        for algorithm in BSI_SERVER_HOST_KEY_ALGORITHMS.values():
+            for value in temp["SERVER_HOST_KEY"]:
+                if value.__contains__(algorithm["name"]):
+                    temp["SERVER_HOST_KEY"].remove(value)
+        for algorithm in BSI_ENCRYPTION_ALGORITHMS.values():
+            for value in temp["ENCRYPTION_SERVER_TO_CLIENT"]:
+                if value.__contains__(algorithm["name"]):
+                    temp["ENCRYPTION_SERVER_TO_CLIENT"].remove(value)
+        for algorithm in BSI_MAC_ALGORITHMS.values():
+            for value in temp["MAC_SERVER_TO_CLIENT"]:
+                if value.__contains__(algorithm["name"]):
+                    temp["MAC_SERVER_TO_CLIENT"].remove(value)
 
         return 0 if not any(temp.values()) else temp

@@ -504,7 +504,17 @@ class bsi_compliance_tls(BaseModule):
         handshakeSettings.cipherNames = ["aes256", "aes128"]
         
         # Send ClientHello message
-        connection.handshakeClientCert(settings=handshakeSettings)
+        try:
+            connection.handshakeClientCert(settings=handshakeSettings)
+        except:
+            # This is probably because the server has a self-signed certificate
+            # Try again without the client certificate
+            self.info("Handshake failed. Server probably has a self-signed certificate. Retrying without client certificate.")
+            try:
+                connection.handshakeClientAnonymous(settings=handshakeSettings)
+            except:
+                self.warning("Handshake failed. Could not establish a tls connection. Assuming encrypt-then-mac is not supported.")
+                return False
         
         # Check if the server supports the encrypt-then-mac extension
         if connection.session.encryptThenMAC:
@@ -534,7 +544,18 @@ class bsi_compliance_tls(BaseModule):
         
         # Create a TLS connection
         connection = TLSConnection(sock)
-        connection.handshakeClientCert()
+        # Send ClientHello message
+        try:
+            connection.handshakeClientCert()
+        except:
+            # This is probably because the server has a self-signed certificate
+            # Try again without the client certificate
+            self.info("Handshake failed. Server probably has a self-signed certificate. Retrying without client certificate.")
+            try:
+                connection.handshakeClientAnonymous()
+            except:
+                self.warning("Handshake failed. Could not establish a tls connection. Assuming extended master secret is not supported.")
+                return False
         
         # Check if the server supports the extended master secret extension
         if connection.session.extendedMasterSecret:
@@ -620,3 +641,4 @@ class bsi_compliance_tls(BaseModule):
                 insecure_ciphers.append(cipher_suite)
                 continue
             secure_ciphers.append(cipher_suite)
+        return secure_ciphers, insecure_ciphers

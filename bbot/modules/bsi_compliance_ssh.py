@@ -89,8 +89,6 @@ class bsi_compliance_ssh(BaseModule):
         "report",
     ]  # active = Makes active connections to target systems, safe = Non-intrusive, safe to run, report = Generates a report at the end of the scan,
     meta = {"description": "Checks Algorithms used by the Target - SSH"}
-    options = {"version": "1.0"}
-    options_desc = {"version": "Version based on last fundamental Change"}
     _max_event_handlers = 4
     _type = "scan"
     options = {"compliant_until": ""}

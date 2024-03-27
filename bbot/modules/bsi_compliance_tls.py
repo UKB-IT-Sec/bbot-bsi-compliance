@@ -476,7 +476,7 @@ class bsi_compliance_tls(BaseModule):
                 })
         
         self.info("BSI Compliance check complete")
-        compliance_event = self.make_event(output_data, "BSI_COMPLIANCE", source=event, tags=["TLS"])
+        compliance_event = self.make_event(output_data, "BSI_COMPLIANCE_RESULT", source=event, tags=["TLS"])
         await self.emit_event(compliance_event)
 
     
@@ -606,6 +606,7 @@ class bsi_compliance_tls(BaseModule):
                     cipher_suite["reason"] = "Nicht empfohlen in TR-02102-2 | encrypt-then-mac Erweiterung nicht unterstützt 3.3.4.5"
                     insecure_ciphers.append(cipher_suite)
                     lucky13_vulnerable = True
+                    continue
             secure_ciphers.append(cipher_suite)
         return secure_ciphers, insecure_ciphers, lucky13_vulnerable
         

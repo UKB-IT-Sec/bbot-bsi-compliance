@@ -1,6 +1,6 @@
 from bbot.modules.base import BaseModule
 import socket, copy
-from datetime import datetime
+import datetime
 
 
 BSI_KEX_ALGORITHMS = {
@@ -80,9 +80,6 @@ BSI_SERVER_HOST_KEY_ALGORITHMS = {
 }
 
 
-CURRENT_YEAR = datetime.now().year
-
-
 class bsi_compliance_ssh(BaseModule):
     watched_events = ["PROTOCOL"]
     produced_events = ["BSI_COMPLIANCE_RESULT", "FINDING", "VULNERABILITY"]
@@ -92,10 +89,17 @@ class bsi_compliance_ssh(BaseModule):
         "report",
     ]  # active = Makes active connections to target systems, safe = Non-intrusive, safe to run, report = Generates a report at the end of the scan,
     meta = {"description": "Checks Algorithms used by the Target - SSH"}
-    options = {"version": "1.0"}
-    options_desc = {"version": "Version based on last fundamental Change"}
-    _max_event_handlers = 2
-    _type = "check"
+    _max_event_handlers = 4
+    _type = "scan"
+    options = {"compliant_until": ""}
+    options_desc = {"compliant_until": "Configuration compliant until year (e.g. 2026)"}
+
+    async def setup(self):
+        self.compliant_until = self.config.get("compliant_until", "")
+        if not self.compliant_until:
+            self.compliant_until = datetime.datetime.now().year + 2
+        self.compliant_until = int(self.compliant_until)
+        return True
 
     async def handle_event(self, event):
         if "SSH" in event.data["protocol"]:  # Tests if the protocol matches
@@ -115,7 +119,7 @@ class bsi_compliance_ssh(BaseModule):
                     tags="SSH",
                 )
                 for algorithm in BSI_KEX_ALGORITHMS.values()
-                if algorithm["valid_until"] < CURRENT_YEAR + 2
+                if algorithm["valid_until"] < self.compliant_until
             ]
             [
                 await self.emit_event(
@@ -131,7 +135,7 @@ class bsi_compliance_ssh(BaseModule):
                     tags="SSH",
                 )
                 for algorithm in BSI_SERVER_HOST_KEY_ALGORITHMS.values()
-                if algorithm["valid_until"] < CURRENT_YEAR + 2
+                if algorithm["valid_until"] < self.compliant_until
             ]
             [
                 await self.emit_event(
@@ -147,7 +151,7 @@ class bsi_compliance_ssh(BaseModule):
                     tags="SSH",
                 )
                 for algorithm in BSI_MAC_ALGORITHMS.values()
-                if algorithm["valid_until"] < CURRENT_YEAR + 2
+                if algorithm["valid_until"] < self.compliant_until
             ]
             [
                 await self.emit_event(
@@ -163,7 +167,7 @@ class bsi_compliance_ssh(BaseModule):
                     tags="SSH",
                 )
                 for algorithm in BSI_ENCRYPTION_ALGORITHMS.values()
-                if algorithm["valid_until"] < CURRENT_YEAR + 2
+                if algorithm["valid_until"] < self.compliant_until
             ]
 
             # Check for Server Algorithms
@@ -173,16 +177,16 @@ class bsi_compliance_ssh(BaseModule):
             target_algorithms = self.get_algorithms(target_ip, target_port)
             if target_algorithms != 0:
                 parsed_algorithms = self.parser(target_algorithms)
-                compliance_test_result = self.convert_list_to_dict(self.check_compliance(parsed_algorithms))
-                del compliance_test_result["ENCRYPTION_CLIENT_TO_SERVER"]
-                del compliance_test_result["MAC_CLIENT_TO_SERVER"]
-                del compliance_test_result["COMPRESSION_CLIENT_TO_SERVER"]
-                del compliance_test_result["COMPRESSION_SERVER_TO_CLIENT"]
+                found_algorithms = self.filter_output_types(self.convert_list_to_dict(parsed_algorithms))
+                invalid_algorithms = self.filter_output_types(
+                    self.convert_list_to_dict(self.check_compliance(parsed_algorithms))
+                )
+
                 compliance_data = {
                     "host": target_ip,
                     "port": target_port,
-                    "found_algorithms": self.convert_list_to_dict(parsed_algorithms),
-                    "invalid_algorithms": compliance_test_result,
+                    "found_algorithms": found_algorithms,
+                    "invalid_algorithms": invalid_algorithms,
                 }
                 await self.emit_event(compliance_data, "BSI_COMPLIANCE_RESULT", source=event, tags="SSH")
             else:
@@ -275,6 +279,13 @@ class bsi_compliance_ssh(BaseModule):
         )
 
         return result
+
+    def filter_output_types(self, input_list):
+        del input_list["ENCRYPTION_CLIENT_TO_SERVER"]
+        del input_list["MAC_CLIENT_TO_SERVER"]
+        del input_list["COMPRESSION_CLIENT_TO_SERVER"]
+        del input_list["COMPRESSION_SERVER_TO_CLIENT"]
+        return input_list
 
     def convert_list_to_dict(self, input_list):
         parsed_algorithm = copy.deepcopy(input_list)

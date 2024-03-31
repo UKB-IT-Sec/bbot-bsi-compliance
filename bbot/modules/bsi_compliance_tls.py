@@ -476,7 +476,7 @@ class bsi_compliance_tls(BaseModule):
                 })
         
         self.info("BSI Compliance check complete")
-        compliance_event = self.make_event(output_data, "BSI_COMPLIANCE_RESULT", source=event, tags=["TLS"])
+        compliance_event = self.make_event(output_data, "BSI_COMPLIANCE_RESULT", source=event, host=str(event.host), tags=["TLS"])
         await self.emit_event(compliance_event)
 
     

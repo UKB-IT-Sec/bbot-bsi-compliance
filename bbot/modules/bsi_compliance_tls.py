@@ -454,6 +454,7 @@ class bsi_compliance_tls(BaseModule):
             await self.emit_event(
                     {"description": "Server is potentially vulnerable to LUCKY13.",
                      "host": str(event.host),
+                     "port": int(event.port),
                      "url": event.data},
                     "FINDING",
                     tags=["TLS", "LUCKY13"],
@@ -476,7 +477,7 @@ class bsi_compliance_tls(BaseModule):
                 })
         
         self.info("BSI Compliance check complete")
-        compliance_event = self.make_event(output_data, "BSI_COMPLIANCE_RESULT", source=event, host=str(event.host), tags=["TLS"])
+        compliance_event = self.make_event(output_data, "BSI_COMPLIANCE_RESULT", source=event, host=str(event.host), port=int(event.port), tags=["TLS"])
         await self.emit_event(compliance_event)
 
     

@@ -7,24 +7,24 @@ BSI_KEX_ALGORITHMS = {
     "diffie-hellman-group-exchange-sha256": {
         "name": "diffie-hellman-group-exchange-sha256",
         "valid_until": 2030,
-        "description": "Must use SHA-256 for the key derivation pseudo-random-function (PRF), the length of the prime number p should be at least 3000 bits, the order of the generator g should at least have the size of 2 to the power of 250 and p should be a safe prime, which means that with p = 2q+1, both p and q are prime",
+        "description": "TR-02102-4 | 3.3",
     },
     "diffie-hellman-group15-sha512": {"name": "diffie-hellman-group15-sha512", "valid_until": 2030},
     "diffie-hellman-group16-sha512": {"name": "diffie-hellman-group16-sha512", "valid_until": 2030},
     "ecdh-sha2-nistp256": {
         "name": "ecdh-sha2-nistp256",
         "valid_until": 2030,
-        "description": "requires curve length <= 256",
+        "description": "TR-02102-4 | 3.3",
     },
     "ecdh-sha2-nistp384": {
         "name": "ecdh-sha2-nistp384",
         "valid_until": 2030,
-        "description": "requires curve length > 256 and <= 384",
+        "description": "TR-02102-4 | 3.3",
     },
     "ecdh-sha2-nistp521": {
         "name": "ecdh-sha2-nistp521",
         "valid_until": 2030,
-        "description": "requires curve length > 384",
+        "description": "TR-02102-4 | 3.3",
     },
 }
 
@@ -45,37 +45,37 @@ BSI_SERVER_HOST_KEY_ALGORITHMS = {
     "pgp-sign-dss": {
         "name": "pgp-sign-dss",
         "valid_until": 2029,
-        "description": "For this Algorithm the minimum recommended length of the prime p is 3000 bits and the minimum recommended size of the order q is 250 bits. As corresponding hash function, SHA-256, SHA-384, or SHA-512 is recommended ",
+        "description": "TR-02102-4 | 3.6",
     },
     "ecdsa-sha2-nistp256": {
         "name": "ecdsa-sha2-nistp256",
         "valid_until": 2030,
-        "description": "requires curve length <= 256",
+        "description": "TR-02102-4 | 3.6",
     },
     "ecdsa-sha2-nistp384": {
         "name": "ecdsa-sha2-nistp384",
         "valid_until": 2030,
-        "description": "requires curve length > 256 and <= 384",
+        "description": "TR-02102-4 | 3.6",
     },
     "ecdsa-sha2-nistp521": {
         "name": "ecdsa-sha2-nistp521",
         "valid_until": 2030,
-        "description": "requires curve length > 384",
+        "description": "TR-02102-4 | 3.6",
     },
     "x509v3-ecdsa-sha2-nistp256": {
         "name": "x509v3-ecdsa-sha2-nistp256",
         "valid_until": 2030,
-        "description": "requires curve length <= 256",
+        "description": "TR-02102-4 | 3.6",
     },
     "x509v3-ecdsa-sha2-nistp384": {
         "name": "x509v3-ecdsa-sha2-nistp384",
         "valid_until": 2030,
-        "description": "requires curve length > 256 and <= 384",
+        "description": "TR-02102-4 | 3.6",
     },
     "x509v3-ecdsa-sha2-nistp521": {
         "name": "x509v3-ecdsa-sha2-nistp521",
         "valid_until": 2030,
-        "description": "requires curve length > 384",
+        "description": "TR-02102-4 | 3.6",
     },
 }
 

@@ -362,7 +362,9 @@ class bsi_compliance_tls(BaseModule):
                 "TLS_1_2_CIPHERS": [],
                 "TLS_1_3_CIPHERS": [],
                 "EXTENSIONS": []
-            }
+            },
+            "host": str(event.host),
+            "port": int(event.port),
         }
         self.event = event
 
@@ -477,7 +479,7 @@ class bsi_compliance_tls(BaseModule):
                 })
         
         self.info("BSI Compliance check complete")
-        compliance_event = self.make_event(output_data, "BSI_COMPLIANCE_RESULT", source=event, host=str(event.host), port=int(event.port), tags=["TLS"])
+        compliance_event = self.make_event(output_data, "BSI_COMPLIANCE_RESULT", source=event, tags=["TLS"])
         await self.emit_event(compliance_event)
 
     

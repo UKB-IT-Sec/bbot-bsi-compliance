@@ -17,259 +17,259 @@ CIPHER_SUITES_TLS_1_2 = {
     "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256" : {
         "name": "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.1",
+        "reason": "TR-02102-2 | 3.3.1.1",
     },
     "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384": {
         "name": "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.1",
+        "reason": "TR-02102-2 | 3.3.1.1",
     },
     "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256": {
         "name": "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.1",
+        "reason": "TR-02102-2 | 3.3.1.1",
     },
     "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384": {
         "name": "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.1",
+        "reason": "TR-02102-2 | 3.3.1.1",
     },
     "TLS_ECDHE_ECDSA_WITH_AES_128_CCM": {
         "name": "TLS_ECDHE_ECDSA_WITH_AES_128_CCM",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.1",
+        "reason": "TR-02102-2 | 3.3.1.1",
     },
     "TLS_ECDHE_ECDSA_WITH_AES_256_CCM": {
         "name": "TLS_ECDHE_ECDSA_WITH_AES_256_CCM",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.1",
+        "reason": "TR-02102-2 | 3.3.1.1",
     },
     "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256": {
         "name": "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.1",
+        "reason": "TR-02102-2 | 3.3.1.1",
     },
     "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384": {
         "name": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.1",
+        "reason": "TR-02102-2 | 3.3.1.1",
     },
     "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256": {
         "name": "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.1",
+        "reason": "TR-02102-2 | 3.3.1.1",
     },
     "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384": {
         "name": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.1",
+        "reason": "TR-02102-2 | 3.3.1.1",
     },
     "TLS_DHE_DSS_WITH_AES_128_CBC_SHA256": {
         "name": "TLS_DHE_DSS_WITH_AES_128_CBC_SHA256",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.1",
+        "reason": "TR-02102-2 | 3.3.1.1",
     },
     "TLS_DHE_DSS_WITH_AES_256_CBC_SHA256": {
         "name": "TLS_DHE_DSS_WITH_AES_256_CBC_SHA256",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.1",
+        "reason": "TR-02102-2 | 3.3.1.1",
     },
     "TLS_DHE_DSS_WITH_AES_128_GCM_SHA256": {
         "name": "TLS_DHE_DSS_WITH_AES_128_GCM_SHA256",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.1",
+        "reason": "TR-02102-2 | 3.3.1.1",
     },
     "TLS_DHE_DSS_WITH_AES_256_GCM_SHA384": {
         "name": "TLS_DHE_DSS_WITH_AES_256_GCM_SHA384",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.1",
+        "reason": "TR-02102-2 | 3.3.1.1",
     },
     "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256": {
         "name": "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.1",
+        "reason": "TR-02102-2 | 3.3.1.1",
     },
     "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256": {
         "name": "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.1",
+        "reason": "TR-02102-2 | 3.3.1.1",
     },
     "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256": {
         "name": "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.1",
+        "reason": "TR-02102-2 | 3.3.1.1",
     },
     "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384": {
         "name": "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.1",
+        "reason": "TR-02102-2 | 3.3.1.1",
     },
     "TLS_DHE_RSA_WITH_AES_128_CCM": {
         "name": "TLS_DHE_RSA_WITH_AES_128_CCM",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.1",
+        "reason": "TR-02102-2 | 3.3.1.1",
     },
     "TLS_DHE_RSA_WITH_AES_256_CCM": {
         "name": "TLS_DHE_RSA_WITH_AES_256_CCM",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.1",
+        "reason": "TR-02102-2 | 3.3.1.1",
     },
     # 3.3.1.2
     "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256": {
         "name": "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256",
         "valid_until": 2026,
-        "reason": "Keine Perfect Forward Secrecy Tr-02102-2 | 3.3.1.2",
+        "reason": "Tr-02102-2 | 3.3.1.2",
     },
     "TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384": {
         "name": "TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384",
         "valid_until": 2026,
-        "reason": "Keine Perfect Forward Secrecy Tr-02102-2 | 3.3.1.2",
+        "reason": "Tr-02102-2 | 3.3.1.2",
     },
     "TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256": {
         "name": "TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256",
         "valid_until": 2026,
-        "reason": "Keine Perfect Forward Secrecy Tr-02102-2 | 3.3.1.2",
+        "reason": "Tr-02102-2 | 3.3.1.2",
     },
     "TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384": {
         "name": "TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384",
         "valid_until": 2026,
-        "reason": "Keine Perfect Forward Secrecy Tr-02102-2 | 3.3.1.2",
+        "reason": "Tr-02102-2 | 3.3.1.2",
     },
     "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256": {
         "name": "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256",
         "valid_until": 2026,
-        "reason": "Keine Perfect Forward Secrecy Tr-02102-2 | 3.3.1.2",
+        "reason": "Tr-02102-2 | 3.3.1.2",
     },
     "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384": {
         "name": "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384",
         "valid_until": 2026,
-        "reason": "Keine Perfect Forward Secrecy Tr-02102-2 | 3.3.1.2",
+        "reason": "Tr-02102-2 | 3.3.1.2",
     },
     "TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256": {
         "name": "TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256",
         "valid_until": 2026,
-        "reason": "Keine Perfect Forward Secrecy Tr-02102-2 | 3.3.1.2",
+        "reason": "Tr-02102-2 | 3.3.1.2",
     },
     "TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384": {
         "name": "TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384",
         "valid_until": 2026,
-        "reason": "Keine Perfect Forward Secrecy Tr-02102-2 | 3.3.1.2",
+        "reason": "Tr-02102-2 | 3.3.1.2",
     },
     "TLS_DH_DSS_WITH_AES_128_CBC_SHA256": {
         "name": "TLS_DH_DSS_WITH_AES_128_CBC_SHA256",
         "valid_until": 2026,
-        "reason": "Keine Perfect Forward Secrecy Tr-02102-2 | 3.3.1.2",
+        "reason": "Tr-02102-2 | 3.3.1.2",
     },
     "TLS_DH_DSS_WITH_AES_256_CBC_SHA256": {
         "name": "TLS_DH_DSS_WITH_AES_256_CBC_SHA256",
         "valid_until": 2026,
-        "reason": "Keine Perfect Forward Secrecy Tr-02102-2 | 3.3.1.2",
+        "reason": "Tr-02102-2 | 3.3.1.2",
     },
     "TLS_DH_DSS_WITH_AES_128_GCM_SHA256": {
         "name": "TLS_DH_DSS_WITH_AES_128_GCM_SHA256",
         "valid_until": 2026,
-        "reason": "Keine Perfect Forward Secrecy Tr-02102-2 | 3.3.1.2",
+        "reason": "Tr-02102-2 | 3.3.1.2",
     },
     "TLS_DH_DSS_WITH_AES_256_GCM_SHA384": {
         "name": "TLS_DH_DSS_WITH_AES_256_GCM_SHA384",
         "valid_until": 2026,
-        "reason": "Keine Perfect Forward Secrecy Tr-02102-2 | 3.3.1.2",
+        "reason": "Tr-02102-2 | 3.3.1.2",
     },
     "TLS_DH_RSA_WITH_AES_128_CBC_SHA256": {
         "name": "TLS_DH_RSA_WITH_AES_128_CBC_SHA256",
         "valid_until": 2026,
-        "reason": "Keine Perfect Forward Secrecy Tr-02102-2 | 3.3.1.2",
+        "reason": "Tr-02102-2 | 3.3.1.2",
     },
     "TLS_DH_RSA_WITH_AES_256_CBC_SHA256": {
         "name": "TLS_DH_RSA_WITH_AES_256_CBC_SHA256",
         "valid_until": 2026,
-        "reason": "Keine Perfect Forward Secrecy Tr-02102-2 | 3.3.1.2",
+        "reason": "Tr-02102-2 | 3.3.1.2",
     },
     "TLS_DH_RSA_WITH_AES_128_GCM_SHA256": {
         "name": "TLS_DH_RSA_WITH_AES_128_GCM_SHA256",
         "valid_until": 2026,
-        "reason": "Keine Perfect Forward Secrecy Tr-02102-2 | 3.3.1.2",
+        "reason": "Tr-02102-2 | 3.3.1.2",
     },
     "TLS_DH_RSA_WITH_AES_256_GCM_SHA384": {
         "name": "TLS_DH_RSA_WITH_AES_256_GCM_SHA384",
         "valid_until": 2026,
-        "reason": "Keine Perfect Forward Secrecy Tr-02102-2 | 3.3.1.2",
+        "reason": "Tr-02102-2 | 3.3.1.2",
     },
     # 3.3.1.3
     "TLS_ECDHE_PSK_WITH_AES_128_CBC_SHA256": {
         "name": "TLS_ECDHE_PSK_WITH_AES_128_CBC_SHA256",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.3",
+        "reason": "TR-02102-2 | 3.3.1.3",
     },
     "TLS_ECDHE_PSK_WITH_AES_256_CBC_SHA384": {
         "name": "TLS_ECDHE_PSK_WITH_AES_256_CBC_SHA384",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.3",
+        "reason": "TR-02102-2 | 3.3.1.3",
     },
     "TLS_ECDHE_PSK_WITH_AES_128_GCM_SHA256": {
         "name": "TLS_ECDHE_PSK_WITH_AES_128_GCM_SHA256",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.3",
+        "reason": "TR-02102-2 | 3.3.1.3",
     },
     "TLS_ECDHE_PSK_WITH_AES_256_GCM_SHA384": {
         "name": "TLS_ECDHE_PSK_WITH_AES_256_GCM_SHA384",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.3",
+        "reason": "TR-02102-2 | 3.3.1.3",
     },
     "TLS_ECDHE_PSK_WITH_AES_128_CCM_SHA256": {
         "name": "TLS_ECDHE_PSK_WITH_AES_128_CCM_SHA256",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.3",
+        "reason": "TR-02102-2 | 3.3.1.3",
     },
     "TLS_DHE_PSK_WITH_AES_128_CBC_SHA256": {
         "name": "TLS_DHE_PSK_WITH_AES_128_CBC_SHA256",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.3",
+        "reason": "TR-02102-2 | 3.3.1.3",
     },
     "TLS_DHE_PSK_WITH_AES_256_CBC_SHA384": {
         "name": "TLS_DHE_PSK_WITH_AES_256_CBC_SHA384",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.3",
+        "reason": "TR-02102-2 | 3.3.1.3",
     },
     "TLS_DHE_PSK_WITH_AES_128_GCM_SHA256": {
         "name": "TLS_DHE_PSK_WITH_AES_128_GCM_SHA256",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.3",
+        "reason": "TR-02102-2 | 3.3.1.3",
     },
     "TLS_DHE_PSK_WITH_AES_256_GCM_SHA384": {
         "name": "TLS_DHE_PSK_WITH_AES_256_GCM_SHA384",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.3",
+        "reason": "TR-02102-2 | 3.3.1.3",
     },
     "TLS_DHE_PSK_WITH_AES_128_CCM": {
         "name": "TLS_DHE_PSK_WITH_AES_128_CCM",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.3",
+        "reason": "TR-02102-2 | 3.3.1.3",
     },
     "TLS_DHE_PSK_WITH_AES_256_CCM": {
         "name": "TLS_DHE_PSK_WITH_AES_256_CCM",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.3.1.3",
+        "reason": "TR-02102-2 | 3.3.1.3",
     },
     "TLS_RSA_PSK_WITH_AES_128_CBC_SHA256": {
         "name": "TLS_RSA_PSK_WITH_AES_128_CBC_SHA256",
         "valid_until": 2026,
-        "reason": "Keine Perfect Forward Secrecy Tr-02102-2 | 3.3.1.3",
+        "reason": "Tr-02102-2 | 3.3.1.3",
     },
     "TLS_RSA_PSK_WITH_AES_256_CBC_SHA384": {
         "name": "TLS_RSA_PSK_WITH_AES_256_CBC_SHA384",
         "valid_until": 2026,
-        "reason": "Keine Perfect Forward Secrecy Tr-02102-2 | 3.3.1.3",
+        "reason": "Tr-02102-2 | 3.3.1.3",
     },
     "TLS_RSA_PSK_WITH_AES_128_GCM_SHA256": {
         "name": "TLS_RSA_PSK_WITH_AES_128_GCM_SHA256",
         "valid_until": 2026,
-        "reason": "Keine Perfect Forward Secrecy Tr-02102-2 | 3.3.1.3",
+        "reason": "Tr-02102-2 | 3.3.1.3",
     },
     "TLS_RSA_PSK_WITH_AES_256_GCM_SHA384": {
         "name": "TLS_RSA_PSK_WITH_AES_256_GCM_SHA384",
         "valid_until": 2026,
-        "reason": "Keine Perfect Forward Secrecy Tr-02102-2 | 3.3.1.3",
+        "reason": "Tr-02102-2 | 3.3.1.3",
     },
 }
 
@@ -278,17 +278,17 @@ CIPHER_SUITES_TLS_1_3 = {
     "TLS_AES_128_GCM_SHA256": {
         "name": "TLS_AES_128_GCM_SHA256",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.4.4",
+        "reason": "TR-02102-2 | 3.4.4",
     },
     "TLS_AES_256_GCM_SHA384": {
         "name": "TLS_AES_256_GCM_SHA384",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.4.4",
+        "reason": "TR-02102-2 | 3.4.4",
     },
     "TLS_AES_128_CCM_SHA256": {
         "name": "TLS_AES_128_CCM_SHA256",
         "valid_until": 2029,
-        "reason": "Empfohlen in TR-02102-2 | 3.4.4",
+        "reason": "TR-02102-2 | 3.4.4",
     },
 }
 
@@ -343,7 +343,7 @@ class bsi_compliance_tls(BaseModule):
             # Handle bad input ie. invalid hostnames
             self.error("Error resolving the supplied hostnames")
             return
-
+        
         # Then queue all the scans
         scanner = Scanner()
         scanner.queue_scans(all_scan_requests)
@@ -403,8 +403,8 @@ class bsi_compliance_tls(BaseModule):
             self.verbose(f"TLS 1.2 is supported")
             output_data["found_algorithms"]["PROTOCOLS"].append("TLS 1.2")
             secure_tls_1_2_ciphers, insecure_tls_1_2_ciphers, lucky13_vulnerable = self.check_tls_1_2_cipher_suites(scan_result.tls_1_2_cipher_suites.result.accepted_cipher_suites)
-            output_data["found_algorithms"]["TLS_1_2_CIPHERS"].append(secure_tls_1_2_ciphers + insecure_tls_1_2_ciphers)
-            output_data["invalid_algorithms"]["TLS_1_2_CIPHERS"].append(insecure_tls_1_2_ciphers)
+            output_data["found_algorithms"]["TLS_1_2_CIPHERS"].extend(secure_tls_1_2_ciphers + insecure_tls_1_2_ciphers)
+            output_data["invalid_algorithms"]["TLS_1_2_CIPHERS"].extend(insecure_tls_1_2_ciphers)
             
         else:
             output_data["invalid_algorithms"]["PROTOCOLS"].append("TLS 1.2 NOT SUPPORTED")
@@ -416,8 +416,8 @@ class bsi_compliance_tls(BaseModule):
             output_data["found_algorithms"]["PROTOCOLS"].append("TLS 1.3")
             self.verbose(f"TLS 1.3 is supported")
             secure_tls_1_3_ciphers, insecure_tls_1_3_ciphers = self.check_tls_1_3_cipher_suites(scan_result.tls_1_3_cipher_suites.result.accepted_cipher_suites)
-            output_data["found_algorithms"]["TLS_1_3_CIPHERS"].append(secure_tls_1_3_ciphers + insecure_tls_1_3_ciphers)
-            output_data["invalid_algorithms"]["TLS_1_3_CIPHERS"].append(insecure_tls_1_3_ciphers)
+            output_data["found_algorithms"]["TLS_1_3_CIPHERS"].extend(secure_tls_1_3_ciphers + insecure_tls_1_3_ciphers)
+            output_data["invalid_algorithms"]["TLS_1_3_CIPHERS"].extend(insecure_tls_1_3_ciphers)
         else:
             output_data["invalid_algorithms"]["PROTOCOLS"].append("TLS 1.3 NOT SUPPORTED")
             self.verbose("No TLS 1.3 cipher suites supported")
@@ -437,7 +437,7 @@ class bsi_compliance_tls(BaseModule):
             await self.emit_event(vulnerability_event)
             output_data["invalid_algorithms"]["EXTENSIONS"].append({
                 "name": "heartbeat", 
-                "reason": "Heartbleed Verwundbarkeit erkannt TR-02102-2 | 3.3.4.6"
+                "reason": "TR-02102-2 | 3.3.4.6"
                 })
         
         # Check if the server supports TLS compression (CRIME attack)
@@ -445,7 +445,7 @@ class bsi_compliance_tls(BaseModule):
             self.verbose("Server supports TLS compression")
             output_data["invalid_algorithms"]["EXTENSIONS"].append({
                 "name": "tls-compression", 
-                "reason": "TLS Compression wird unterstützt TR-02102-2 | 3.3.4.3"
+                "reason": "TR-02102-2 | 3.3.4.3"
                 })
         
         # Check if the server is vulnerable to LUCKY13
@@ -462,18 +462,18 @@ class bsi_compliance_tls(BaseModule):
                 )
             output_data["invalid_algorithms"]["EXTENSIONS"].append({
                 "name": "encrypt-then-mac", 
-                "reason": "CBC Cipher suites werden verwendet und encrypt-then-mac nicht unterstützt TR-02102-2 | 3.3.4.4 und 3.3.4.5"
+                "reason": "TR-02102-2 | 3.3.4.4 & 3.3.4.5"
                 })
         
         if self.check_extended_master_secret_supported(event):
             output_data["found_algorithms"]["EXTENSIONS"].append({
                 "name": "extended-master-secret",
-                "reason": "Server unterstützt die extended-master-secret Erweiterung TR-02102-2 | 3.3.4.7"
+                "reason": "TR-02102-2 | 3.3.4.7"
                 })
         else:
             output_data["invalid_algorithms"]["EXTENSIONS"].append({
                 "name": "extended-master-secret",
-                "reason": "Server unterstützt die extended-master-secret Erweiterung nicht TR-02102-2 | 3.3.4.6"
+                "reason": "TR-02102-2 | 3.3.4.6"
                 })
         
         self.info("BSI Compliance check complete")
@@ -592,19 +592,19 @@ class bsi_compliance_tls(BaseModule):
             if cipher_suite_name not in CIPHER_SUITES_TLS_1_2:
                 insecure_ciphers.append({
                     "name": cipher_suite_name,
-                    "reason": "Nicht empfohlen in TR-02102-2",
-                    "valid_until": -1,
+                    "reason": "-",
+                    "valid_until": "-",
                 })
                 continue
             cipher_suite = CIPHER_SUITES_TLS_1_2[cipher_suite_name]
             if cipher_suite["valid_until"] < self.compliant_until:
-                cipher_suite["reason"] = "Nicht empfohlen in TR-02102-2 | Gültigkeitsdauer abgelaufen"
+                cipher_suite["reason"] = "-"
                 insecure_ciphers.append(cipher_suite)
                 continue
             # Check if any of the cipher suites are using cbc since they are only recommended if encrypt-then-mac is supported
             if "CBC" in cipher_suite_name:
                 if not secure_then_mac_supported:
-                    cipher_suite["reason"] = "Nicht empfohlen in TR-02102-2 | encrypt-then-mac Erweiterung nicht unterstützt 3.3.4.5"
+                    cipher_suite["reason"] = "TR-02102-2 | 3.3.4.5"
                     insecure_ciphers.append(cipher_suite)
                     lucky13_vulnerable = True
                     continue
@@ -633,13 +633,13 @@ class bsi_compliance_tls(BaseModule):
             if cipher_suite_name not in CIPHER_SUITES_TLS_1_3:
                 insecure_ciphers.append({
                     "name": cipher_suite_name,
-                    "reason": "Nicht empfohlen in TR-02102-2",
-                    "valid_until": -1,
+                    "reason": "-",
+                    "valid_until": "-",
                 })
                 continue
             cipher_suite = CIPHER_SUITES_TLS_1_3[cipher_suite_name]
             if cipher_suite["valid_until"] < self.compliant_until:
-                cipher_suite["reason"] = "Nicht empfohlen in TR-02102-2 | Gültigkeitsdauer abgelaufen"
+                cipher_suite["reason"] = "-"
                 insecure_ciphers.append(cipher_suite)
                 continue
             secure_ciphers.append(cipher_suite)

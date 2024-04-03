@@ -464,7 +464,7 @@ class bsi_compliance_tls(BaseModule):
                 )
             output_data["invalid_algorithms"]["EXTENSIONS"].append({
                 "name": "encrypt-then-mac", 
-                "reason": "TR-02102-2 | 3.3.4.4 & 3.3.4.5"
+                "reason": "TR-02102-2 | 3.3.4.4 + 3.3.4.5"
                 })
         
         if self.check_extended_master_secret_supported(event):

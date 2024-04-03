@@ -178,8 +178,17 @@ class bsi_compliance_ssh(BaseModule):
             if target_algorithms != 0:
                 parsed_algorithms = self.parser(target_algorithms)
                 found_algorithms = self.filter_output_types(self.convert_list_to_dict(parsed_algorithms))
-                invalid_algorithms = self.filter_output_types(
-                    self.convert_list_to_dict(self.check_compliance(parsed_algorithms))
+                invalid_algorithms = self.check_compliance(parsed_algorithms)
+                if not invalid_algorithms:
+                    invalid_algorithms = {
+                        "KEX": [],
+                        "SERVER_HOST_KEY": [],
+                        "ENCRYPTION_SERVER_TO_CLIENT": [],
+                        "MAC_SERVER_TO_CLIENT": [],
+                    }
+                else:
+                    invalid_algorithms = self.filter_output_types(
+                        self.convert_list_to_dict(invalid_algorithms)
                 )
 
                 compliance_data = {
@@ -347,4 +356,4 @@ class bsi_compliance_ssh(BaseModule):
                 if value.__contains__(algorithm["name"]):
                     temp["MAC_SERVER_TO_CLIENT"].remove(value)
 
-        return 0 if not any(temp.values()) else temp
+        return 0 if not any(temp["KEX"]) and not any(temp["SERVER_HOST_KEY"]) and not any(temp["ENCRYPTION_SERVER_TO_CLIENT"]) and not any(temp["MAC_SERVER_TO_CLIENT"]) else temp

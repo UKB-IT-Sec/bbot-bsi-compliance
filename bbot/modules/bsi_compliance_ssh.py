@@ -351,4 +351,4 @@ class bsi_compliance_ssh(BaseModule):
                 if value.__contains__(algorithm["name"]):
                     temp["MAC_SERVER_TO_CLIENT"].remove(value)
 
-        return 0 if not any(temp.values()) else temp
+        return 0 if not any(temp["KEX"]) and not any(temp["SERVER_HOST_KEY"]) and not any(temp["ENCRYPTION_SERVER_TO_CLIENT"]) and not any(temp["MAC_SERVER_TO_CLIENT"]) else temp

@@ -180,7 +180,12 @@ class bsi_compliance_ssh(BaseModule):
                 found_algorithms = self.filter_output_types(self.convert_list_to_dict(parsed_algorithms))
                 invalid_algorithms = self.check_compliance(parsed_algorithms)
                 if not invalid_algorithms:
-                    invalid_algorithms = None
+                    invalid_algorithms = {
+                        "KEX": [],
+                        "SERVER_HOST_KEY": [],
+                        "ENCRYPTION_SERVER_TO_CLIENT": [],
+                        "MAC_SERVER_TO_CLIENT": [],
+                    }
                 else:
                     invalid_algorithms = self.filter_output_types(
                         self.convert_list_to_dict(invalid_algorithms)

@@ -1,288 +1,287 @@
 from bbot.modules.base import BaseModule
 from bbot.core.event.base import BaseEvent
 import datetime
-import time
 import socket
 import subprocess
 import json
 
 ENCR_IKEV1 = {
-    "ENCR_3DES": {"name": "ENCR_3DES", "iana": b"\x00\x05", "length": b"\x00\x00"},
-    "NULL": {"name": "NULL", "iana": b"\x00\x0b", "length": b"\x00\x00"},
-    "ENCR_AES_CCM_8_128": {"name": "ENCR_AES_CCM_8_128", "iana": b"\x00\x0e", "length": b"\x00\x80"},
-    "ENCR_AES_CCM_8_256": {"name": "ENCR_AES_CCM_8_256", "iana": b"\x00\x0e", "length": b"\x01\x00"},
-    "ENCR_AES_GCM_8_128": {"name": "ENCR_AES_GCM_8_128", "iana": b"\x00\x12", "length": b"\x00\x80"},
-    "ENCR_AES_GCM_8_256": {"name": "ENCR_AES_GCM_8_256", "iana": b"\x00\x12", "length": b"\x01\x00"},
-    "ENCR_AES_GMAC_128": {"name": "ENCR_AES_GMAC_128", "iana": b"\x00\x17", "length": b"\x00\x80"},
-    "ENCR_AES_GMAC_256": {"name": "ENCR_AES_GMAC_256", "iana": b"\x00\x17", "length": b"\x01\x00"},
-    "ENCR_BLOWFISH_CBC_128": {"name": "ENCR_BLOWFISH_CBC_128", "iana": b"\x00\x03", "length": b"\x00\x80"},
-    "ENCR_BLOWFISH_CBC_256": {"name": "ENCR_BLOWFISH_CBC_128", "iana": b"\x00\x03", "length": b"\x01\x00"},
-    "ENCR_CAMELLIA_CBC_128": {"name": "ENCR_CAMELLIA_CBC_128", "iana": b"\x00\x08", "length": b"\x00\x80"},
-    "ENCR_CAMELLIA_CBC_256": {"name": "ENCR_CAMELLIA_CBC_256", "iana": b"\x00\x08", "length": b"\x01\x00"},
-    "ENCR_SERPENT_CBC_128": {"name": "ENCR_SERPENT_CBC_128", "iana": b"\x00\xfc", "length": b"\x00\x80"},
-    "ENCR_SERPENT_CBC_256": {"name": "ENCR_SERPENT_CBC_256", "iana": b"\x00\xfc", "length": b"\x01\x00"},
-    "ENCR_TWOFISH_CBC_128": {"name": "ENCR_TWOFISH_CBC_128", "iana": b"\x00\xfd", "length": b"\x00\x80"},
-    "ENCR_TWOFISH_CBC_256": {"name": "ENCR_TWOFISH_CBC_256", "iana": b"\x00\xfd", "length": b"\x01\x00"},
+    "ENCR-3DES": {"name": "ENCR-3DES", "iana": b"\x00\x05", "length": 0},
+    "NULL": {"name": "NULL", "iana": b"\x00\x0b", "length": 0},
+    "ENCR-AES-CCM-8-128": {"name": "ENCR-AES-CCM-8-128", "iana": b"\x00\x0e", "length": b"\x00\x80"},
+    "ENCR-AES-CCM-8-256": {"name": "ENCR-AES-CCM-8-256", "iana": b"\x00\x0e", "length": b"\x01\x00"},
+    "ENCR-AES-GCM-8-128": {"name": "ENCR-AES-GCM-8-128", "iana": b"\x00\x12", "length": b"\x00\x80"},
+    "ENCR-AES-GCM-8-256": {"name": "ENCR-AES-GCM-8-256", "iana": b"\x00\x12", "length": b"\x01\x00"},
+    "ENCR-AES-GMAC-128": {"name": "ENCR-AES-GMAC-128", "iana": b"\x00\x17", "length": b"\x00\x80"},
+    "ENCR-AES-GMAC-256": {"name": "ENCR-AES-GMAC-256", "iana": b"\x00\x17", "length": b"\x01\x00"},
+    "ENCR-BLOWFISH-CBC-128": {"name": "ENCR-BLOWFISH-CBC-128", "iana": b"\x00\x03", "length": b"\x00\x80"},
+    "ENCR-BLOWFISH-CBC-256": {"name": "ENCR-BLOWFISH-CBC-128", "iana": b"\x00\x03", "length": b"\x01\x00"},
+    "ENCR-CAMELLIA-CBC-128": {"name": "ENCR-CAMELLIA-CBC-128", "iana": b"\x00\x08", "length": b"\x00\x80"},
+    "ENCR-CAMELLIA-CBC-256": {"name": "ENCR-CAMELLIA-CBC-256", "iana": b"\x00\x08", "length": b"\x01\x00"},
+    "ENCR-SERPENT-CBC-128": {"name": "ENCR-SERPENT-CBC-128", "iana": b"\x00\xfc", "length": b"\x00\x80"},
+    "ENCR-SERPENT-CBC-256": {"name": "ENCR-SERPENT-CBC-256", "iana": b"\x00\xfc", "length": b"\x01\x00"},
+    "ENCR-TWOFISH-CBC-128": {"name": "ENCR-TWOFISH-CBC-128", "iana": b"\x00\xfd", "length": b"\x00\x80"},
+    "ENCR-TWOFISH-CBC-256": {"name": "ENCR-TWOFISH-CBC-256", "iana": b"\x00\xfd", "length": b"\x01\x00"},
 }
 
 INTEG_IKEV1 = {
     "MD5": {"name": "MD5", "iana": b"\x00\x01"},
     "SHA": {"name": "SHA", "iana": b"\x00\x02"},
-    "AES_GMAC_128": {"name": "AES_GMAC_128", "iana": b"\x00\x0b"},
-    "AES_GMAC_192": {"name": "AES_GMAC_192", "iana": b"\x00\x0c"},
-    "AES_GMAC_256": {"name": "AES_GMAC_256", "iana": b"\x00\x0d"},
+    "AES-GMAC-128": {"name": "AES-GMAC-128", "iana": b"\x00\x0b"},
+    "AES-GMAC-192": {"name": "AES-GMAC-192", "iana": b"\x00\x0c"},
+    "AES-GMAC-256": {"name": "AES-GMAC-256", "iana": b"\x00\x0d"},
 }
 
 DH_IKEV1 = {
-    "1024_bit_MODP_Group": {"name": "1024_bit_MODP_Group", "iana": b"\x00\x02"},
-    "768_bit_MODP_Group": {"name": "768_bit_MODP_Group", "iana": b"\x00\x01"},
-    "1536_bit_MODP_Group": {"name": "1536_bit_MODP_Group", "iana": b"\x00\x05"},
-    "2048_bit_MODP_Group": {"name": "2048_bit_MODP_Group", "iana": b"\x00\x0e"},
-    "6144_bit_MODP_Group": {"name": "6144_bit_MODP_Group", "iana": b"\x00\x11"},
-    "8192_bit_MODP_Group": {"name": "8192_bit_MODP_Group", "iana": b"\x00\x12"},
-    "1024s160_bit_MODP_Group": {"name": "1024s160_bit_MODP_Group", "iana": b"\x00\x16"},
-    "2048s224_bit_MODP_Group": {"name": "2048s224_bit_MODP_Group", "iana": b"\x00\x17"},
-    "2048s256_bit_MODP_Group": {"name": "2048s256_bit_MODP_Group", "iana": b"\x00\x18"},
-    "192_bit_random_ECP_group": {"name": "192_bit_random_ECP_group", "iana": b"\x00\x19"},
-    "224_bit_random_ECP_group": {"name": "224_bit_random_ECP_group", "iana": b"\x00\x1a"},
+    "768-bit-MODP-Group": {"name": "768-bit-MODP-Group", "iana": b"\x00\x01"},
+    "1024-bit-MODP-Group": {"name": "1024-bit-MODP-Group", "iana": b"\x00\x02"},
+    "1536-bit-MODP-Group": {"name": "1536-bit-MODP-Group", "iana": b"\x00\x05"},
+    "2048-bit-MODP-Group": {"name": "2048-bit-MODP-Group", "iana": b"\x00\x0e"},
+    "6144-bit-MODP-Group": {"name": "6144-bit-MODP-Group", "iana": b"\x00\x11"},
+    "8192-bit-MODP-Group": {"name": "8192-bit-MODP-Group", "iana": b"\x00\x12"},
+    "1024s160-bit-MODP-Group": {"name": "1024s160-bit-MODP-Group", "iana": b"\x00\x16"},
+    "2048s224-bit-MODP-Group": {"name": "2048s224-bit-MODP-Group", "iana": b"\x00\x17"},
+    "2048s256-bit-MODP-Group": {"name": "2048s256-bit-MODP-Group", "iana": b"\x00\x18"},
+    "192-bit-random-ECP-group": {"name": "192-bit-random-ECP-group", "iana": b"\x00\x19"},
+    "224-bit-random-ECP-group": {"name": "224-bit-random-ECP-group", "iana": b"\x00\x1a"},
     "brainpoolP224r1": {"name": "brainpoolP224r1", "iana": b"\x00\x1b"},
     "CURVE25519": {"name": "CURVE25519", "iana": b"\x00\x1f"},
 }
 
 AUTH_IKEV1 = {
     "PSK": {"name": "PSK", "iana": b"\x00\x01"},
-    "DDS_SIGNATURES": {"name": "DDS_SIGNATURES", "iana": b"\x00\x02"},
-    "RSA_SIGNATURES": {"name": "RSA_SIGNATURES", "iana": b"\x00\x03"},
-    "RSA_ENCR": {"name": "RSA_ENCR", "iana": b"\x00\x04"},
-    "RSA_ENCR_REVISED": {"name": "RSA_ENCR_REVISED", "iana": b"\x00\x05"},
+    "DDS-SIGNATURES": {"name": "DDS-SIGNATURES", "iana": b"\x00\x02"},
+    "RSA-SIGNATURES": {"name": "RSA-SIGNATURES", "iana": b"\x00\x03"},
+    "RSA-ENCR": {"name": "RSA-ENCR", "iana": b"\x00\x04"},
+    "RSA-ENCR-REVISED": {"name": "RSA-ENCR-REVISED", "iana": b"\x00\x05"},
 }
 
 # Recommendations of BSI for IKEv2:
 BSI_ENCR_IKEV1 = {
-    "ENCR_AES_CBC_128": {
-        "name": "ENCR_AES_CBC_128",
+    "ENCR-AES-CBC-128": {
+        "name": "ENCR-AES-CBC-128",
         "iana": b"\x00\x07",
         "length": b"\x00\x80",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.1",
+        "reason": "TR-02102-3 | 3.2.1",
     },
-    "ENCR_AES_CBC_256": {
-        "name": "ENCR_AES_CBC_256",
+    "ENCR-AES-CBC-256": {
+        "name": "ENCR-AES-CBC-256",
         "iana": b"\x00\x07",
         "length": b"\x01\x00",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.1",
+        "reason": "TR-02102-3 | 3.2.1",
     },
-    "ENCR_AES_CTR_128": {
-        "name": "ENCR_AES_CTR_128",
+    "ENCR-AES-CTR-128": {
+        "name": "ENCR-AES-CTR-128",
         "iana": b"\x00\x0d",
         "length": b"\x00\x80",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.1",
+        "reason": "TR-02102-3 | 3.2.1",
     },
-    "ENCR_AES_CTR_256": {
-        "name": "ENCR_AES_CTR_256",
+    "ENCR-AES-CTR-256": {
+        "name": "ENCR-AES-CTR-256",
         "iana": b"\x00\x0d",
         "length": b"\x01\x00",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.1",
+        "reason": "TR-02102-3 | 3.2.1",
     },
-    "ENCR_AES_GCM_16_128": {
-        "name": "ENCR_AES_GCM_16_128",
+    "ENCR-AES-GCM-16-128": {
+        "name": "ENCR-AES-GCM-16-128",
         "iana": b"\x00\x14",
         "length": b"\x00\x80",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.1",
+        "reason": "TR-02102-3 | 3.2.1",
     },
-    "ENCR_AES_GCM_16_256": {
-        "name": "ENCR_AES_GCM_16_256",
+    "ENCR-AES-GCM-16-256": {
+        "name": "ENCR-AES-GCM-16-256",
         "iana": b"\x00\x14",
         "length": b"\x01\x00",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.1",
+        "reason": "TR-02102-3 | 3.2.1",
     },
-    "ENCR_AES_GCM_12_128": {
-        "name": "ENCR_AES_GCM_12_128",
+    "ENCR-AES-GCM-12-128": {
+        "name": "ENCR-AES-GCM-12-128",
         "iana": b"\x00\x13",
         "length": b"\x00\x80",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.1",
+        "reason": "TR-02102-3 | 3.2.1",
     },
-    "ENCR_AES_GCM_12_256": {
-        "name": "ENCR_AES_GCM_12_256",
+    "ENCR-AES-GCM-12-256": {
+        "name": "ENCR-AES-GCM-12-256",
         "iana": b"\x00\x13",
         "length": b"\x01\x00",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.1",
+        "reason": "TR-02102-3 | 3.2.1",
     },
-    "ENCR_AES_CCM_16_128": {
-        "name": "ENCR_AES_CCM_16_128",
+    "ENCR-AES-CCM-16-128": {
+        "name": "ENCR-AES-CCM-16-128",
         "iana": b"\x00\x10",
         "length": b"\x00\x80",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.1",
+        "reason": "TR-02102-3 | 3.2.1",
     },
-    "ENCR_AES_CCM_16_256": {
-        "name": "ENCR_AES_CCM_16_256",
+    "ENCR-AES-CCM-16-256": {
+        "name": "ENCR-AES-CCM-16-256",
         "iana": b"\x00\x10",
         "length": b"\x01\x00",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.1",
+        "reason": "TR-02102-3 | 3.2.1",
     },
-    "ENCR_AES_CCM_12_128": {
-        "name": "ENCR_AES_CCM_12_128",
+    "ENCR-AES-CCM-12-128": {
+        "name": "ENCR-AES-CCM-12-128",
         "iana": b"\x00\x0f",
         "length": b"\x00\x80",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.1",
+        "reason": "TR-02102-3 | 3.2.1",
     },
-    "ENCR_AES_CCM_12_256": {
-        "name": "ENCR_AES_CCM_12_256",
+    "ENCR-AES-CCM-12-256": {
+        "name": "ENCR-AES-CCM-12-256",
         "iana": b"\x00\x0f",
         "length": b"\x01\x00",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.1",
+        "reason": "TR-02102-3 | 3.2.1",
     },
 }
 
 BSI_INTEG_IKEV1 = {
-    "AUTH_AES_XCBC_96": {
-        "name": "AUTH_AES_XCBC_96",
+    "AUTH-AES-XCBC-96": {
+        "name": "AUTH-AES-XCBC-96",
         "iana": b"\x00\x09",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.3",
+        "reason": "TR-02102-3 | 3.2.3",
     },
-    "AUTH_HMAC_SHA2_256_128": {
-        "name": "AUTH_HMAC_SHA2_256_128",
+    "AUTH-HMAC-SHA2-256-128": {
+        "name": "AUTH-HMAC-SHA2-256-128",
         "iana": b"\x00\x05",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.3",
+        "reason": "TR-02102-3 | 3.2.3",
     },
-    "AUTH_HMAC_SHA2_512_256": {
-        "name": "AUTH_HMAC_SHA2_512_256",
+    "AUTH-HMAC-SHA2-512-256": {
+        "name": "AUTH-HMAC-SHA2-512-256",
         "iana": b"\x00\x07",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.3",
+        "reason": "TR-02102-3 | 3.2.3",
     },
-    "AUTH_HMAC_SHA2_384_192": {
-        "name": "AUTH_HMAC_SHA2_384_192",
+    "AUTH-HMAC-SHA2-384-192": {
+        "name": "AUTH-HMAC-SHA2-384-192",
         "iana": b"\x00\x06",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.3",
+        "reason": "TR-02102-3 | 3.2.3",
     },
 }
 
 BSI_DH_IKEV1 = {
-    "3072_bit_MODP_Group": {
-        "name": "3072_bit_MODP_Group",
+    "3072-bit-MODP-Group": {
+        "name": "3072-bit-MODP-Group",
         "iana": b"\x00\x0f",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.4",
+        "reason": "TR-02102-3 | 3.2.4",
     },
-    "4096_bit_MODP_Group": {
-        "name": "4096_bit_MODP_Group",
+    "4096-bit-MODP-Group": {
+        "name": "4096-bit-MODP-Group",
         "iana": b"\x00\x10",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.4",
+        "reason": "TR-02102-3 | 3.2.4",
     },
-    "256_bit_random_ECP_group": {
-        "name": "256_bit_random_ECP_group",
+    "256-bit-random-ECP-group": {
+        "name": "256-bit-random-ECP-group",
         "iana": b"\x00\x13",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.4",
+        "reason": "TR-02102-3 | 3.2.4",
     },
-    "384_bit_random_ECP_group": {
-        "name": "384_bit_random_ECP_group",
+    "384-bit-random-ECP-group": {
+        "name": "384-bit-random-ECP-group",
         "iana": b"\x00\x14",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.4",
+        "reason": "TR-02102-3 | 3.2.4",
     },
-    "521_bit_random_ECP_group": {
-        "name": "521_bit_random_ECP_group",
+    "521-bit-random-ECP-group": {
+        "name": "521-bit-random-ECP-group",
         "iana": b"\x00\x15",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.4",
+        "reason": "TR-02102-3 | 3.2.4",
     },
     "brainpoolP256r1": {
         "name": "brainpoolP256r1",
         "iana": b"\x00\x1c",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.4",
+        "reason": "TR-02102-3 | 3.2.4",
     },
     "brainpoolP384r1": {
         "name": "brainpoolP384r1",
         "iana": b"\x00\x1d",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.4",
+        "reason": "TR-02102-3 | 3.2.4",
     },
     "brainpoolP512r1": {
         "name": "brainpoolP512r1",
         "iana": b"\x00\x1e",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.4",
+        "reason": "TR-02102-3 | 3.2.4",
     },
 }
 
 BSI_AUTH_IKEV1 = {
-    "ECDSA_256_secp256r1": {
-        "name": "ECDSA_256_secp256r1",
+    "ECDSA-256-secp256r1": {
+        "name": "ECDSA-256-secp256r1",
         "iana": b"\x00\x09",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.5",
+        "reason": "TR-02102-3 | 3.2.5",
     },
-    "ECDSA_384_secp256r1": {
-        "name": "ECDSA_384_secp256r1",
+    "ECDSA-384-secp256r1": {
+        "name": "ECDSA-384-secp256r1",
         "iana": b"\x00\x0a",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.5",
+        "reason": "TR-02102-3 | 3.2.5",
     },
-    "ECDSA_512_secp256r1": {
-        "name": "ECDSA_512_secp256r1",
+    "ECDSA-512-secp256r1": {
+        "name": "ECDSA-512-secp256r1",
         "iana": b"\x00\x0b",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.5",
+        "reason": "TR-02102-3 | 3.2.5",
     },
-    "ECDSA_256_brainpoolP256r1": {
-        "name": "ECDSA_256_brainpoolP256r1",
+    "ECDSA-256-brainpoolP256r1": {
+        "name": "ECDSA-256-brainpoolP256r1",
         "iana": b"\x00\x0e",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.5",
+        "reason": "TR-02102-3 | 3.2.5",
     },
-    "ECDSA_384_brainpoolP384r1": {
-        "name": "ECDSA_384_brainpoolP384r1",
+    "ECDSA-384-brainpoolP384r1": {
+        "name": "ECDSA-384-brainpoolP384r1",
         "iana": b"\x00\x0e",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.5",
+        "reason": "TR-02102-3 | 3.2.5",
     },
-    "ECDSA_512_brainpoolP512r1": {
-        "name": "ECDSA_512_brainpoolP512r1",
+    "ECDSA-512-brainpoolP512r1": {
+        "name": "ECDSA-512-brainpoolP512r1",
         "iana": b"\x00\x0e",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.5",
+        "reason": "TR-02102-3 | 3.2.5",
     },
-    "RSASSA_PSS": {
-        "name": "RSASSA_PSS",
+    "RSASSA-PSS": {
+        "name": "RSASSA-PSS",
         "iana": b"\x00\x0e",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.5",
+        "reason": "TR-02102-3 | 3.2.5",
     },
-    "ECGDSA_256_brainpoolP256r1": {
-        "name": "ECGDSA_256_brainpoolP256r1",
+    "ECGDSA-256-brainpoolP256r1": {
+        "name": "ECGDSA-256-brainpoolP256r1",
         "iana": b"\x00\x0e",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.5",
+        "reason": "TR-02102-3 | 3.2.5",
     },
-    "ECGDSA_384_brainpoolP384r1": {
-        "name": "ECGDSA_384_brainpoolP384r1",
+    "ECGDSA-384-brainpoolP384r1": {
+        "name": "ECGDSA-384-brainpoolP384r1",
         "iana": b"\x00\x0e",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.5",
+        "reason": "TR-02102-3 | 3.2.5",
     },
-    "ECGDSA_512_brainpoolP512r1": {
-        "name": "ECGDSA_512_brainpoolP512r1",
+    "ECGDSA-512-brainpoolP512r1": {
+        "name": "ECGDSA-512-brainpoolP512r1",
         "iana": b"\x00\x0e",
         "valid_until": 2030,
-        "reason": "BSI-TR-02102-3 | Section 3.2.5",
+        "reason": "TR-02102-3 | 3.2.5",
     },
 }
 
@@ -326,10 +325,8 @@ class bsi_compliance_ipsec(BaseModule):
 
     def send_receive(self, sock, data, server_ip, server_port):
         try:
-            # Send the data to the server
             sock.sendto(data, (server_ip, server_port))
 
-            # Receive the response from the server
             response, _ = sock.recvfrom(4096)
             return response
 
@@ -489,7 +486,7 @@ class bsi_compliance_ipsec(BaseModule):
             for integ_alg in INTEG_IKEV1.keys():
                 for auth_alg in AUTH_IKEV1.keys():
                     for dh_group in DH_IKEV1.keys():
-                        if ENCR_IKEV1[encr_alg].get("name") == "ENCR_3DES":
+                        if ENCR_IKEV1[encr_alg].get("length") == 0:
                             response = self.send_receive(
                                 udp_sock,
                                 self.build_special_packet(
@@ -502,7 +499,6 @@ class bsi_compliance_ipsec(BaseModule):
                                 target_port,
                             )
                         else:
-                            # Send the data and receive the response
                             response = self.send_receive(
                                 udp_sock,
                                 self.build_packet(
@@ -515,7 +511,7 @@ class bsi_compliance_ipsec(BaseModule):
                                 target_ip,
                                 target_port,
                             )
-                        # time.sleep(1)
+
                         if response:
                             hex_response = response.hex()
 
@@ -533,7 +529,7 @@ class bsi_compliance_ipsec(BaseModule):
     def test_algorithms(self, encr_alg, integ_alg, auth_alg, dh_group, target_ip, target_port):
         udp_sock = self.create_socket()
 
-        if encr_alg == "ENCR_3DES":
+        if ENCR_IKEV1[encr_alg]["length"] == 0:
             response = self.send_receive(
                 udp_sock,
                 self.build_special_packet(
@@ -558,7 +554,6 @@ class bsi_compliance_ipsec(BaseModule):
                 target_ip,
                 target_port,
             )
-        # time.sleep(1)
 
         if response:
             hex_response = response.hex()
@@ -571,7 +566,7 @@ class bsi_compliance_ipsec(BaseModule):
         invalid_algorithms = {
             "found_encr_algorithms": [],
             "found_integ_algorithms": [],
-            "found_auth_algorithms": [],
+            "found_auth_methods": [],
             "found_dh_groups": [],
         }
 
@@ -580,31 +575,33 @@ class bsi_compliance_ipsec(BaseModule):
         # Encryption Test
         for x in ENCR_IKEV1.keys():
             if self.test_algorithms(x, integ_worked, auth_worked, dh_worked, target_ip, target_port) == 1:
-                invalid_algorithms["found_encr_algorithms"].append(x)
+                invalid_algorithms["found_encr_algorithms"].append({"name": x})
 
         # Integrity Test
         for x in INTEG_IKEV1.keys():
             if self.test_algorithms(encr_worked, x, auth_worked, dh_worked, target_ip, target_port) == 1:
-                invalid_algorithms["found_integ_algorithms"].append(x)
+                invalid_algorithms["found_integ_algorithms"].append({"name": x})
 
         # Authentication Test
         for x in AUTH_IKEV1.keys():
             if self.test_algorithms(encr_worked, integ_worked, x, dh_worked, target_ip, target_port) == 1:
-                invalid_algorithms["found_auth_algorithms"].append(x)
+                invalid_algorithms["found_auth_methods"].append({"name": x})
 
         # DH-Group Test
         for x in DH_IKEV1.keys():
             if self.test_algorithms(encr_worked, integ_worked, auth_worked, x, target_ip, target_port) == 1:
-                invalid_algorithms["found_dh_groups"].append(x)
+                invalid_algorithms["found_dh_groups"].append({"name": x})
 
         return invalid_algorithms
 
     async def generate_output(self, target, source_event, tags):
         await self.update_expiration(target, source_event, tags)
-        invalid_algorithms = self.compliance_check(target.split(":")[0], int(target.split(":")[1]))
+        host = target.split(":")[0]
+        port = int(target.split(":")[1])
+        invalid_algorithms = self.compliance_check(host, port)
         compliance_data = {
-            "host": target.split(":")[0],
-            "port": target.split(":")[1],
+            "host": host,
+            "port": port,
             "invalid_algorithms": invalid_algorithms,
         }
         await self.emit_event(compliance_data, "BSI_COMPLIANCE_RESULT", source=source_event, tags=tags)
@@ -621,13 +618,11 @@ class bsi_compliance_ipsec(BaseModule):
             ip = j.get("ip", "")
             host = j.get("host", ip)
             port = str(j.get("port", ""))
+            tags = "IPSEC"
             banner = j.get("metadata", {}).get("banner", "").strip()
             if port:
                 port_data = f"{host}:{port}"
             protocol = j.get("protocol", "")
-            tags = set()
-            if host and ip:
-                tags.add(f"ip-{ip}")
             if host and port and protocol:
                 source_event = _input.get(port_data)
                 protocol_data = {"host": host, "protocol": protocol.upper()}
